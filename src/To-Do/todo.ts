@@ -1,3 +1,5 @@
+// リテラル型
+type Priority = "high" | "medium" | "low";
 //####################################################
 // 画面描画時、イベントを付与
 //#####################################################
@@ -5,7 +7,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const addButton = document.getElementById("add-Button");
     if (addButton) {
         addButton.addEventListener("click", () => {
-            registerTodo();
+            const inputTodoElement = document.getElementById("todoInput");
+            const prioritySelect = document.getElementById("prioritySelect");
+            if (!(inputTodoElement instanceof HTMLInputElement) || !(prioritySelect instanceof HTMLSelectElement)) {
+                console.log("input要素が見つかりません。");
+                return;
+            }
+            const inputTodoValue = inputTodoElement.value;
+            const prioritySelectValue = prioritySelect.value;
+            if (isPriority(prioritySelectValue)) {
+                registerTodo(inputTodoValue, prioritySelectValue);
+            }
         });
     }
     const backButton = document.getElementById("back-Button");
@@ -16,18 +28,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 //####################################################
+// 優先度の入力値をチェック
+//#####################################################
+function isPriority(value: string): value is Priority {
+    return value === "high" || value === "medium" || value === "low";
+}
+//####################################################
 // 入力されたTODOをローカルストレージに格納
 //#####################################################
-function registerTodo(): void {
-    //----------------------
-    // 入力値を取得し、型チェック
-    //----------------------
-    const inputTodoElement = document.getElementById("todoInput");
-    if (!(inputTodoElement instanceof HTMLInputElement)) {
-        console.log("input要素が見つかりません。");
-        return;
-    }
-    const inputTodoValue = inputTodoElement.value;
+function registerTodo(inputTodo: string, priority: Priority): void {
     //----------------------
     // IDを取得し、ローカルストレージに保存（既存のローカルストレージを取得し、入力されたTODOを追加し、ローカルストレージへ保存）。
     // その後入力値を削除
@@ -35,7 +44,7 @@ function registerTodo(): void {
     const toDoId = generateId();
     const existingTodosJson = localStorage.getItem("todos");
     const existingTodos = existingTodosJson ? JSON.parse(existingTodosJson) : [];
-    const todos = { id: toDoId, text: inputTodoValue };
+    const todos = { id: toDoId, text: inputTodo, priority: priority };
     existingTodos.push(todos);
     localStorage.setItem("todos", JSON.stringify(existingTodos));
     deleteInputTodo();

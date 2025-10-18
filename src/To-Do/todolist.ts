@@ -1,3 +1,5 @@
+// リテラル型
+type Priority = "high" | "medium" | "low";
 //####################################################
 // 画面描画時、イベントを付与
 //#####################################################
@@ -28,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
-type todoList = { id: string; text: string };
+type todoList = { id: string; text: string; priority: Priority };
 //####################################################
 // ローカルストレージに保存されている情報をもとにTo-Doリストを作成
 //#####################################################
@@ -41,6 +43,7 @@ function createToDoListHtml(): void {
     let todoListHtml = "";
     todosObj.forEach(todosObj => {
         todoListHtml += '<li class="todo-item">';
+        todoListHtml += `<label for="" class="todo-text">${todosObj.priority}</label>`;
         todoListHtml += `<label for="" class="todo-text">${todosObj.text}</label>`;
         todoListHtml += `<button class="delete-todo" data-id="${todosObj.id}">削除</button>`;
         todoListHtml += "</li>";
