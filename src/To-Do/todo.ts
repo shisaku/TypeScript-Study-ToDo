@@ -36,7 +36,8 @@ function isPriority(value: string): value is Priority {
 //####################################################
 // 入力されたTODOをローカルストレージに格納
 //#####################################################
-function registerTodo(inputTodo: string, priority: Priority): void {
+function registerTodo(inputTodo: string, priority?: Priority): void {
+    const defaultPriority = priority ?? "medium";
     //----------------------
     // IDを取得し、ローカルストレージに保存（既存のローカルストレージを取得し、入力されたTODOを追加し、ローカルストレージへ保存）。
     // その後入力値を削除
@@ -44,7 +45,7 @@ function registerTodo(inputTodo: string, priority: Priority): void {
     const toDoId = generateId();
     const existingTodosJson = localStorage.getItem("todos");
     const existingTodos = existingTodosJson ? JSON.parse(existingTodosJson) : [];
-    const todos = { id: toDoId, text: inputTodo, priority: priority };
+    const todos = { id: toDoId, text: inputTodo, priority: defaultPriority };
     existingTodos.push(todos);
     localStorage.setItem("todos", JSON.stringify(existingTodos));
     deleteInputTodo();
